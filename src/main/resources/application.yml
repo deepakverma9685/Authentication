@@ -1,0 +1,109 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: h2  # Change to 'postgres' to use PostgreSQL
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+    show-sql: true
+  mail:
+    host: smtp.example.com
+    port: 587
+    username: noreply@example.com
+    password: emailpassword
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+
+# Application Configuration (shared across all profiles)
+app:
+  jwt:
+    secret: verysecretkeythatislongenoughforsecurityandshouldbeatleast512bitsforsafeusewithhsmac512algorithm
+    accessTokenExpirationMs: 900000 # 15 minutes
+    refreshTokenExpirationMs: 86400000 # 24 hours
+  mail:
+    enabled: false
+    from: noreply@example.com
+  base-url: http://localhost:8080
+  redis:
+    host: localhost
+    port: 6379
+  cache:
+    type: simple
+  data:
+    redis:
+      repositories:
+        enabled: false
+  flyway:
+    enabled: false  # Disable Flyway globally
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+---
+# PostgreSQL Configuration Profile
+spring:
+  config:
+    activate:
+      on-profile: postgres
+  datasource:
+    url: jdbc:postgresql://localhost:5433/auth_db  # Updated port to match Docker
+    username: auth_user
+    password: strongpassword
+    driver-class-name: org.postgresql.Driver
+  h2:
+    console:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: update  # Use 'create' for first time, then 'update'
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+
+---
+# Production Configuration Profile (for Docker)
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:postgresql://postgres:5432/auth_db  # Use service name 'postgres' for Docker
+    username: auth_user
+    password: strongpassword
+    driver-class-name: org.postgresql.Driver
+  h2:
+    console:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create  # Create tables on first run
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false  # Disable SQL logging in production
+  flyway:
+    enabled: false  # Disable Flyway in production

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication API Documentation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .method {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .post { background-color: #28a745; }
+        .get { background-color: #007bff; }
+        .path {
+            font-family: 'Courier New', monospace;
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .admin-section {
+            background: #e8f5e8;
+            border: 1px solid #c3e6c3;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .url-link {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .url-link:hover {
+            text-decoration: underline;
+        }
+        .code-block {
+            background: #f1f3f4;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .working { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Authentication API Documentation</h1>
+        
+        <div class="admin-section">
+            <h2>📋 Quick Access URLs</h2>
+            <p><strong>Application Base URL:</strong> <code>http://localhost:8080</code></p>
+            <ul>
+                <li><strong>H2 Database Console:</strong> <a href="http://localhost:8080/h2-console/" class="url-link" target="_blank">http://localhost:8080/h2-console/</a> <span class="status-badge working">✅ Working</span></li>
+                <li><strong>API Health Check:</strong> <a href="http://localhost:8080/api/health" class="url-link" target="_blank">http://localhost:8080/api/health</a> <span class="status-badge working">✅ Working</span></li>
+                <li><strong>Actuator Health:</strong> <a href="http://localhost:8080/actuator/health" class="url-link" target="_blank">http://localhost:8080/actuator/health</a> <span class="status-badge error">⚠️ See Note</span></li>
+                <li><strong>API Documentation:</strong> <a href="http://localhost:8080/api/docs" class="url-link" target="_blank">http://localhost:8080/api/docs</a> <span class="status-badge working">✅ Working</span></li>
+            </ul>
+            <p><em>Note: Actuator health shows DOWN due to mail/redis connectivity, but application works fine.</em></p>
+        </div>
+
+        <h2>🔗 API Endpoints</h2>
+
+        <div class="endpoint">
+            <h3><span class="method post">POST</span> <span class="path">/api/v1/auth/register</span></h3>
+            <p><strong>Description:</strong> Register a new user account</p>
+            <p><strong>Request Body:</strong></p>
+            <div class="code-block">{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "password": "SecurePassword123!"
+}</div>
+            <p><strong>Response:</strong> User object with ID and email verification status</p>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method post">POST</span> <span class="path">/api/v1/auth/login</span></h3>
+            <p><strong>Description:</strong> Authenticate user and receive JWT tokens</p>
+            <p><strong>Request Body:</strong></p>
+            <div class="code-block">{
+  "email": "john.doe@example.com",
+  "password": "SecurePassword123!"
+}</div>
+            <p><strong>Response:</strong> JWT access token, refresh token, and expiration time</p>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method post">POST</span> <span class="path">/api/v1/auth/refresh</span></h3>
+            <p><strong>Description:</strong> Refresh JWT access token using refresh token</p>
+            <p><strong>Request Body:</strong></p>
+            <div class="code-block">{
+  "refreshToken": "your_refresh_token_here"
+}</div>
+            <p><strong>Response:</strong> New access token and refresh token</p>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method post">POST</span> <span class="path">/api/v1/auth/forgot-password</span></h3>
+            <p><strong>Description:</strong> Initiate password reset process</p>
+            <p><strong>Request Body:</strong></p>
+            <div class="code-block">{
+  "email": "john.doe@example.com"
+}</div>
+            <p><strong>Response:</strong> Success message (email sent if account exists)</p>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method post">POST</span> <span class="path">/api/v1/auth/reset-password</span></h3>
+            <p><strong>Description:</strong> Complete password reset using token from email</p>
+            <p><strong>Request Body:</strong></p>
+            <div class="code-block">{
+  "token": "reset_token_from_email",
+  "newPassword": "NewSecurePassword123!"
+}</div>
+            <p><strong>Response:</strong> Success message</p>
+        </div>
+
+        <h2>🔐 Authentication</h2>
+        <div class="admin-section">
+            <p><strong>Type:</strong> Bearer Token (JWT)</p>
+            <p><strong>Header:</strong> <code>Authorization: Bearer &lt;your_jwt_token&gt;</code></p>
+            <p><strong>Access Token Expiry:</strong> 24 hours</p>
+            <p><strong>Refresh Token Expiry:</strong> 7 days</p>
+        </div>
+
+        <h2>💾 Database Information</h2>
+        <div class="admin-section">
+            <p><strong>Current Database:</strong> H2 (In-Memory)</p>
+            <p><strong>JDBC URL:</strong> <code>jdbc:h2:mem:testdb</code></p>
+            <p><strong>Username:</strong> <code>SA</code></p>
+            <p><strong>Password:</strong> <em>(leave empty)</em></p>
+            <p><strong>⚠️ Important:</strong> Data is lost when application restarts. For persistent storage, switch to PostgreSQL profile.</p>
+        </div>
+
+        <h2>📝 Example Usage</h2>
+        <div class="code-block">
+# Register a new user
+curl -X POST http://localhost:8080/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "Test",
+    "lastName": "User",
+    "email": "test@example.com", 
+    "password": "SecurePassword123!"
+  }'
+
+# Login and get tokens
+curl -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com",
+    "password": "SecurePassword123!"
+  }'
+        </div>
+    </div>
+</body>
+</html>
