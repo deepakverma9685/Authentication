@@ -1,0 +1,45 @@
+# Gradle build output
+/build/
+/bin/
+/libs/
+/tmp/
+
+# IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Kotlin/Java build
+out/
+
+# Dependency directories
+.gradle/
+
+# VS Code
+.vscode/
+
+# Environment files
+.env
+
+# Others
+*.class
+*.jar
+*.war
+*.ear
+
+# Test reports
+/reports/
+
+# Static files
+/static/
+
+# Templates
+/templates/
